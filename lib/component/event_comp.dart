@@ -60,8 +60,9 @@ class PushEventComp extends StatelessWidget with EventCompCommons {
         children: [
           titleRow(event),
           Divider(),
+          repo(event),
+          Divider(),
           commitDescriptions(event),
-          Divider()
         ]);
   }
 }
@@ -71,9 +72,12 @@ mixin EventCompCommons {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(event.actor?.login ?? "", style: TextStyle(color: Colors.blue)),
+        Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(Icons.people, color: Colors.grey.shade400),
+          SizedBox(width: 4),
+          Text(event.actor?.login ?? "", style: TextStyle(color: Colors.blue)),
+        ]),
         Text(event.type ?? ""),
-        Text(event.repo?.name ?? "", style: TextStyle(color: Colors.purple))
       ],
     );
   }
@@ -85,6 +89,33 @@ mixin EventCompCommons {
         children: (event.payload?["commits"] as List)
             .map((e) =>
                 Text((e["message"] as String?)?.replaceAll('\n', '') ?? ""))
+            .toList()
+            .take(5)
             .toList());
+  }
+
+  Column repo(Event event) {
+    return Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Icon(Icons.book, color: Colors.grey.shade400),
+            SizedBox(width: 4),
+            Text(event.repo?.name ?? "",
+                style: const TextStyle(color: Colors.purple)),
+          ]),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.star, color: Colors.yellow),
+              Text(event.repo?.stargazersCount.toString() ?? '')
+            ],
+          )
+        ],
+      ),
+      if (event.repo?.description.isNotEmpty ?? false)
+        Text(event.repo?.description ?? "")
+    ]);
   }
 }
