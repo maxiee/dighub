@@ -1,3 +1,4 @@
+import 'package:dighub/page/activity/page_public_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,7 +14,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("DigHub")),
+      body: Wrap(
+        children: [
+          OutlinedButton(
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => PublicEventsPage())),
+              child: Text('Public Events'))
+        ],
+      ),
     );
   }
 }

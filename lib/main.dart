@@ -1,3 +1,4 @@
+import 'package:dighub/global.dart';
 import 'package:dighub/page/page_home.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,12 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+    Global.init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
