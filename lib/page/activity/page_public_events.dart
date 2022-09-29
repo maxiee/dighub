@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dighub/component/event_comp.dart';
 import 'package:dighub/global.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
@@ -28,7 +29,7 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
   }
 
   void loadEvents() {
-    eventStream = Global.gitHub.activity.listPublicEvents(pages: 5).listen((event) {
+    eventStream = Global.gitHub.activity.listPublicEvents(pages: 1).listen((event) {
       setState(() {
         events.add(event);
       });
@@ -38,9 +39,10 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade200,
       appBar: AppBar(title: Text('Public Events')),
       body: ListView(
-        children: events.map((e) => Text(e.toString())).toList(),
+        children: events.map((e) => EventComp(e)).toList(),
       ),
     );
   }
