@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dighub/component/event_comp.dart';
 import 'package:dighub/global.dart';
+import 'package:dighub/widget/star_dighub.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 
@@ -40,7 +41,9 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(title: Text('Public Events')),
+      appBar: AppBar(title: Text('Public Events'), actions: [
+        StarDighub()
+      ]),
       body: ListView(
         children: events.map((e) => EventComp(e)).toList(),
       ),
