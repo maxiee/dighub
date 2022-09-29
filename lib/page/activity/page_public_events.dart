@@ -59,6 +59,7 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
     Global.gitHub.repositories
         .getRepository(RepositorySlug.full(repoName))
         .then((repo) {
+          print('on repo ${repo.name}-${repo.stargazersCount}-${repo.description}');
           Global.repoCache.put(repo);
           concurrentRepoFetchCount--;
         });

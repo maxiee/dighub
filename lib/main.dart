@@ -1,6 +1,7 @@
 import 'package:dighub/global.dart';
 import 'package:dighub/page/page_home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const App());
@@ -22,9 +23,9 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
+    return MultiProvider(
+      providers: [ChangeNotifierProvider.value(value: Global.repoCache)],
+      child: MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()),
     );
   }
 }

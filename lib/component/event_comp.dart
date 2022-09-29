@@ -1,6 +1,8 @@
 import 'package:dighub/constant.dart';
+import 'package:dighub/data/repo_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:provider/provider.dart';
 
 class EventComp extends StatefulWidget {
   final Event event;
@@ -16,7 +18,7 @@ class _EventCompState extends State<EventComp> {
     String? type = widget.event.type;
     switch (type) {
       case kPushEvent:
-        return PushEventCard(child: PushEventComp(widget.event));
+        return EventCard(child: PushEventComp(widget.event));
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -32,9 +34,9 @@ class _EventCompState extends State<EventComp> {
   }
 }
 
-class PushEventCard extends StatelessWidget {
+class EventCard extends StatelessWidget {
   final Widget child;
-  const PushEventCard({super.key, required this.child});
+  const EventCard({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +56,24 @@ class PushEventComp extends StatelessWidget with EventCompCommons {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          titleRow(event),
-          Divider(),
-          repo(event),
-          Divider(),
-          commitDescriptions(event),
-        ]);
+    return Selector<RepoCache, Repository?>(
+        builder: ((context, value, child) {
+          Repository? r = value ?? event.repo;
+          return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                titleRow(event),
+                Divider(),
+                repo(r),
+                Divider(),
+                commitDescriptions(event),
+              ]);
+        }),
+        selector: ((context, cache) => cache.get(event.repo?.name ?? "")),
+        shouldRebuild: (previous, next) =>
+            previous?.stargazersCount != next?.stargazersCount ||
+            previous?.description != next?.description);
   }
 }
 
@@ -94,7 +104,7 @@ mixin EventCompCommons {
             .toList());
   }
 
-  Column repo(Event event) {
+  Column repo(Repository? repo) {
     return Column(children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,20 +112,21 @@ mixin EventCompCommons {
           Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(Icons.book, color: Colors.grey.shade400),
             SizedBox(width: 4),
-            Text(event.repo?.name ?? "",
+            Text(repo?.name ?? "",
                 style: const TextStyle(color: Colors.purple)),
           ]),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.star, color: Colors.yellow),
-              Text(event.repo?.stargazersCount.toString() ?? '')
-            ],
-          )
+          if (repo?.description != null)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.star, color: Colors.yellow),
+                Text(repo?.stargazersCount.toString() ?? '')
+              ],
+            )
         ],
       ),
-      if (event.repo?.description.isNotEmpty ?? false)
-        Text(event.repo?.description ?? "")
+      if (repo?.description.isNotEmpty ?? false)
+        Text(repo?.description ?? "Loading...")
     ]);
   }
 }
