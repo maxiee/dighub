@@ -42,7 +42,7 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
     });
   }
 
-  void loadRepoDetail(Event e) {
+  void loadRepoDetail(Event e) async {
     print("loadRepoDetail");
 
     String? repoName = e.repo?.name;
@@ -50,19 +50,22 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
 
     if (Global.repoCache.contains(repoName)) return;
 
+    final repoCached = await Global.repoCache.getCacheAndDB(repoName);
+    if (repoCached != null) return;
+
     if (concurrentRepoFetchCount >= concurrentRepoFetchLimit) {
       print('loadRepoDetail limit');
       return;
     }
 
     concurrentRepoFetchCount++;
-    Global.gitHub.repositories
-        .getRepository(RepositorySlug.full(repoName))
-        .then((repo) {
-          print('on repo ${repo.name}-${repo.stargazersCount}-${repo.description}');
-          Global.repoCache.put(repo);
-          concurrentRepoFetchCount--;
-        });
+    final repoFetched = await Global.gitHub.repositories
+        .getRepository(RepositorySlug.full(repoName));
+
+    print(
+        'on repo ${repoFetched.name}-${repoFetched.stargazersCount}-${repoFetched.description}');
+    Global.repoCache.put(repoFetched);
+    concurrentRepoFetchCount--;
   }
 
   @override

@@ -70,7 +70,7 @@ class PushEventComp extends StatelessWidget with EventCompCommons {
                 commitDescriptions(event),
               ]);
         }),
-        selector: ((context, cache) => cache.get(event.repo?.name ?? "")),
+        selector: ((context, cache) => cache.getCache(event.repo?.name ?? "")),
         shouldRebuild: (previous, next) =>
             previous?.stargazersCount != next?.stargazersCount ||
             previous?.description != next?.description);

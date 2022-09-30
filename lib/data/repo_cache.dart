@@ -25,9 +25,9 @@ class RepoCache extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Repository?> get(String fullName) async {
+  Future<Repository?> getCacheAndDB(String fullName) async {
     if (cache.containsKey(fullName)) {
-      return cache[fullName];
+      return getCache(fullName);
     }
 
     final repoCached = await Global.isar.cachedRepos
@@ -37,10 +37,14 @@ class RepoCache extends ChangeNotifier {
 
     if (repoCached != null) {
       cache[fullName] = repoCached.toRespository();
-      return cache[fullName];
+      return getCache(fullName);
     }
 
     return null;
+  }
+
+  Repository? getCache(String fullName) {
+    return cache[fullName];
   }
 
   bool contains(String fullName) {
