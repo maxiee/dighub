@@ -28,6 +28,8 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+isar_version: &isar_version 3.0.1
+
 dependencies:
   flutter:
     sdk: flutter
@@ -35,6 +37,8 @@ dependencies:
   provider: ^6.0.3
   infinite_scroll_pagination: ^3.2.0
   visibility_detector: ^0.3.3
+  isar: *isar_version
+  isar_flutter_libs: *isar_version # contains Isar Core
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,6 +47,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  isar_generator: *isar_version
+  build_runner: any
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
