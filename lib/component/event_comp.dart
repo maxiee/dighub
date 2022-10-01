@@ -3,6 +3,7 @@ import 'package:dighub/data/repo_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventComp extends StatefulWidget {
   final Event event;
@@ -34,6 +35,7 @@ class _EventCompState extends State<EventComp> {
       case kWatchEvent:
       case kGollumEvent:
       case kReleaseEvent:
+      case kMemberEvent:
         return EventCard(child: BasicEventComp(widget.event));
     }
     return Column(
@@ -269,37 +271,44 @@ mixin EventCompCommons {
     );
   }
 
-  Column repo(Repository? repo) {
+  InkWell repo(Repository? repo) {
     String repoName;
     if (repo != null && repo.fullName.isNotEmpty) {
       repoName = repo.fullName;
     } else {
       repoName = repo?.name ?? '';
     }
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(Icons.book, color: Colors.grey.shade400),
-          SizedBox(width: 4),
-          Expanded(
-            child: Text(
-              repoName,
-              style: const TextStyle(color: Colors.purple),
+    return InkWell(
+      onTap: () async {
+        if (repo == null) return;
+        final uri = Uri.parse(repo.htmlUrl);
+        await launchUrl(uri);
+      },
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(Icons.book, color: Colors.grey.shade400),
+            SizedBox(width: 4),
+            Expanded(
+              child: Text(
+                repoName,
+                style: const TextStyle(color: Colors.purple),
+              ),
             ),
-          ),
-          if (repo?.description != null)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.star, color: Colors.yellow),
-                Text(repo?.stargazersCount.toString() ?? '')
-              ],
-            )
-        ],
-      ),
-      if (repo?.description.isNotEmpty ?? false)
-        Text(repo?.description ?? "Loading...")
-    ]);
+            if (repo?.description != null)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.star, color: Colors.yellow),
+                  Text(repo?.stargazersCount.toString() ?? '')
+                ],
+              )
+          ],
+        ),
+        if (repo?.description.isNotEmpty ?? false)
+          Text(repo?.description ?? "Loading...")
+      ]),
+    );
   }
 }

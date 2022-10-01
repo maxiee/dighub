@@ -11,3 +11,4 @@ const String kWatchEvent = "WatchEvent";
 const String kGollumEvent = "GollumEvent";
 const String kReleaseEvent = "ReleaseEvent";
 const String kIssuesEvent = "IssuesEvent";
+const String kMemberEvent = "MemberEvent";
