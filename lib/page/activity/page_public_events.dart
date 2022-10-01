@@ -33,6 +33,9 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
   }
 
   void loadEvents() {
+    eventStream?.cancel();
+    events.clear();
+
     eventStream =
         Global.gitHub.activity.listPublicEvents(pages: 1).listen((event) {
       if (event.type == kDeleteEvent) {
@@ -96,6 +99,7 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
       body: ListView(
         children: events.map((e) => EventComp(e)).toList(),
       ),
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.refresh), onPressed: loadEvents),
     );
   }
 }
