@@ -18,7 +18,7 @@ class _StarDighubState extends State<StarDighub> {
   void initState() {
     super.initState();
     rateLimit = Global.gitHub.rateLimitRemaining;
-    rateLimitingTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+    rateLimitingTimer = Timer.periodic(Duration(seconds: 3), (timer) {
       setState(() {
         rateLimit = Global.gitHub.rateLimitRemaining;
       });
