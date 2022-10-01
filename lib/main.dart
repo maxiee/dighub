@@ -23,9 +23,20 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider.value(value: Global.repoCache)],
-      child: MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()),
+    return FutureBuilder(
+      future: Global.init(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MultiProvider(
+              providers: [
+                ChangeNotifierProvider.value(value: Global.repoCache)
+              ],
+              child: MaterialApp(
+                  debugShowCheckedModeBanner: false, home: HomePage()));
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 }
