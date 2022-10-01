@@ -45,11 +45,8 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
         if (repoFetched == null) {
           return;
         }
-        print('===== on detail =====');
         if (widget.filterZeroStar) {
-          print("${repoFetched?.fullName}-${repoFetched?.stargazersCount}");
-          if (repoFetched?.stargazersCount == 0) {
-            print('filter zero');
+          if (repoFetched.stargazersCount == 0) {
             return;
           }
         }

@@ -26,7 +26,7 @@ class _EventCompState extends State<EventComp> {
       case kForkEvent:
         return EventCard(child: ForkEventComp(widget.event));
       case kIssueCommentEvent:
-      case kIssueEvent:
+      case kIssuesEvent:
         return EventCard(child: IssueCommentEventComp(widget.event));
       case kPullRequestReviewCommentEvent:
       case kCommitCommentEvent:
