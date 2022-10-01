@@ -6,7 +6,6 @@ import 'package:dighub/global.dart';
 import 'package:dighub/widget/star_dighub.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class PublicEventsPage extends StatefulWidget {
   const PublicEventsPage({super.key});
@@ -19,8 +18,6 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
   static const concurrentRepoFetchLimit = 5;
   StreamSubscription<Event>? eventStream;
   List<Event> events = [];
-
-  int concurrentRepoFetchCount = 0;
 
   @override
   void initState() {
@@ -40,42 +37,43 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
       if (event.type == kDeleteEvent) {
         return;
       }
-      setState(() {
-        events.add(event);
+      loadRepoDetail(event).then((repoFetched) {
+        setState(() {
+          events.add(event);
+        });
       });
     });
   }
 
-  void loadRepoDetail(Event e) async {
+  Future<Repository?> loadRepoDetail(Event e) async {
     print("loadRepoDetail");
 
     String? repoName = e.repo?.name;
-    if (repoName == null) return;
+    if (repoName == null) return null;
 
     if (Global.repoCache.contains(repoName)) {
       print('loadRepoDetail cache memory');
-      return;
+      return Global.repoCache.getCache(repoName);
     }
 
     final repoCached = await Global.repoCache.getCacheAndDB(repoName);
     if (repoCached != null) {
       print('loadRepoDetail cache db');
-      return;
+      return repoCached;
     }
 
-    if (concurrentRepoFetchCount >= concurrentRepoFetchLimit) {
-      print('loadRepoDetail limit');
-      return;
+    try {
+      final repoFetched = await Global.gitHub.repositories
+          .getRepository(RepositorySlug.full(repoName));
+
+      print(
+          'on repo ${repoFetched.name}-${repoFetched.stargazersCount}-${repoFetched.description}');
+      Global.repoCache.put(repoFetched);
+
+      return repoFetched;
+    } on RepositoryNotFound {
+      return null;
     }
-
-    concurrentRepoFetchCount++;
-    final repoFetched = await Global.gitHub.repositories
-        .getRepository(RepositorySlug.full(repoName));
-
-    print(
-        'on repo ${repoFetched.name}-${repoFetched.stargazersCount}-${repoFetched.description}');
-    Global.repoCache.put(repoFetched);
-    concurrentRepoFetchCount--;
   }
 
   @override
@@ -84,17 +82,7 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(title: Text('Public Events'), actions: [StarDighub()]),
       body: ListView(
-        children: events
-            .map((e) => VisibilityDetector(
-                key: ObjectKey(e),
-                onVisibilityChanged: (info) {
-                  var percent = info.visibleFraction;
-                  if (percent > 0.1) {
-                    loadRepoDetail(e);
-                  }
-                },
-                child: EventComp(e)))
-            .toList(),
+        children: events.map((e) => EventComp(e)).toList(),
       ),
     );
   }
