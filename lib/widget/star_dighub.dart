@@ -1,8 +1,35 @@
+import 'dart:async';
+
 import 'package:dighub/global.dart';
 import 'package:flutter/material.dart';
 
-class StarDighub extends StatelessWidget {
+class StarDighub extends StatefulWidget {
   const StarDighub({super.key});
+
+  @override
+  State<StarDighub> createState() => _StarDighubState();
+}
+
+class _StarDighubState extends State<StarDighub> {
+  late Timer rateLimitingTimer;
+  int? rateLimit;
+
+  @override
+  void initState() {
+    super.initState();
+    rateLimit = Global.gitHub.rateLimitRemaining;
+    rateLimitingTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      setState(() {
+        rateLimit = Global.gitHub.rateLimitRemaining;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    rateLimitingTimer.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +48,8 @@ class StarDighub extends StatelessWidget {
               Icon(Icons.star, color: Colors.yellow),
             ],
           ),
-          if (Global.gitHub.rateLimitRemaining != null)
-            Text('rateLimit remain ${Global.gitHub.rateLimitRemaining}')
+          if (rateLimit != null)
+            Text('rateLimit remain ${rateLimit}')
         ],
       ),
     );
