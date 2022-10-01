@@ -88,6 +88,8 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
       return repoFetched;
     } on RepositoryNotFound {
       return null;
+    } on Exception {
+      return null;
     }
   }
 

@@ -10,3 +10,4 @@ const String kPullRequestReviewEvent = "PullRequestReviewEvent";
 const String kWatchEvent = "WatchEvent";
 const String kGollumEvent = "GollumEvent";
 const String kReleaseEvent = "ReleaseEvent";
+const String kIssueEvent = "IssueEvent";
