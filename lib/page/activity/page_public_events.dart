@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dighub/component/event_comp.dart';
+import 'package:dighub/constant.dart';
 import 'package:dighub/global.dart';
 import 'package:dighub/widget/star_dighub.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,9 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
   void loadEvents() {
     eventStream =
         Global.gitHub.activity.listPublicEvents(pages: 1).listen((event) {
+      if (event.type == kDeleteEvent) {
+        return;
+      }
       setState(() {
         events.add(event);
       });
