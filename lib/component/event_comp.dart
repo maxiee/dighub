@@ -21,6 +21,8 @@ class _EventCompState extends State<EventComp> {
         return EventCard(child: PushEventComp(widget.event));
       case kPullRequestEvent:
         return EventCard(child: PullRequestEventComp(widget.event));
+      case kCreateEvent:
+        return EventCard(child: CreateEventComp(widget.event));
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -51,14 +53,30 @@ class EventCard extends StatelessWidget {
   }
 }
 
-class CreateEventComp extends StatelessWidget {
+class CreateEventComp extends StatelessWidget with EventCompCommons {
   final Event event;
 
   const CreateEventComp(this.event, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Selector<RepoCache, Repository?>(
+        builder: (context, value, child) {
+          Repository? r = value ?? event.repo;
+          return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                titleRow(event),
+                Divider(),
+                repo(r),
+                Divider(),
+              ]);
+        },
+        selector: (context, cache) => cache.getCache(event.repo?.name ?? ""),
+        shouldRebuild: (previous, next) =>
+            previous?.stargazersCount != next?.stargazersCount ||
+            previous?.description != next?.description);
   }
 }
 
@@ -147,13 +165,10 @@ mixin EventCompCommons {
   }
 
   Column pullRequestDescription(Event event) {
-    print(event.payload);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(event.payload?['pull_request']['title'] ?? "")
-        ],
+      mainAxisSize: MainAxisSize.min,
+      children: [Text(event.payload?['pull_request']['title'] ?? "")],
     );
   }
 
@@ -171,8 +186,7 @@ mixin EventCompCommons {
           Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(Icons.book, color: Colors.grey.shade400),
             SizedBox(width: 4),
-            Text(repoName,
-                style: const TextStyle(color: Colors.purple)),
+            Text(repoName, style: const TextStyle(color: Colors.purple)),
           ]),
           if (repo?.description != null)
             Row(
