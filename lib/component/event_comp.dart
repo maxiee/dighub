@@ -51,6 +51,17 @@ class EventCard extends StatelessWidget {
   }
 }
 
+class CreateEventComp extends StatelessWidget {
+  final Event event;
+
+  const CreateEventComp(this.event, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
 class PullRequestEventComp extends StatelessWidget with EventCompCommons {
   final Event event;
 
@@ -147,6 +158,12 @@ mixin EventCompCommons {
   }
 
   Column repo(Repository? repo) {
+    String repoName;
+    if (repo != null && repo.fullName.isNotEmpty) {
+      repoName = repo.fullName;
+    } else {
+      repoName = repo?.name ?? '';
+    }
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -154,7 +171,7 @@ mixin EventCompCommons {
           Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(Icons.book, color: Colors.grey.shade400),
             SizedBox(width: 4),
-            Text(repo?.name ?? "",
+            Text(repoName,
                 style: const TextStyle(color: Colors.purple)),
           ]),
           if (repo?.description != null)
