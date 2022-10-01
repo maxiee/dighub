@@ -8,3 +8,5 @@ const String kPullRequestReviewCommentEvent = "PullRequestReviewCommentEvent";
 const String kCommitCommentEvent = "CommitCommentEvent";
 const String kPullRequestReviewEvent = "PullRequestReviewEvent";
 const String kWatchEvent = "WatchEvent";
+const String kGollumEvent = "GollumEvent";
+const String kReleaseEvent = "ReleaseEvent";

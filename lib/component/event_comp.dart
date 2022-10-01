@@ -31,6 +31,8 @@ class _EventCompState extends State<EventComp> {
       case kCommitCommentEvent:
       case kPullRequestReviewEvent:
       case kWatchEvent:
+      case kGollumEvent:
+      case kReleaseEvent:
         return EventCard(child: BasicEventComp(widget.event));
     }
     return Column(
@@ -87,7 +89,6 @@ class BasicEventComp extends StatelessWidget with EventCompCommons {
             previous?.description != next?.description);
   }
 }
-
 
 class IssueCommentEventComp extends StatelessWidget with EventCompCommons {
   final Event event;
@@ -278,11 +279,14 @@ mixin EventCompCommons {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(Icons.book, color: Colors.grey.shade400),
-            SizedBox(width: 4),
-            Text(repoName, style: const TextStyle(color: Colors.purple)),
-          ]),
+          Icon(Icons.book, color: Colors.grey.shade400),
+          SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              repoName,
+              style: const TextStyle(color: Colors.purple),
+            ),
+          ),
           if (repo?.description != null)
             Row(
               mainAxisSize: MainAxisSize.min,
