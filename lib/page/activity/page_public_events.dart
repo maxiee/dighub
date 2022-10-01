@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 
 class PublicEventsPage extends StatefulWidget {
-  const PublicEventsPage({super.key});
+  bool filterZeroStar;
+  PublicEventsPage({super.key, this.filterZeroStar = false});
 
   @override
   State<PublicEventsPage> createState() => _PublicEventsPageState();
@@ -38,6 +39,17 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
         return;
       }
       loadRepoDetail(event).then((repoFetched) {
+        if (repoFetched == null) {
+          return;
+        }
+        print('===== on detail =====');
+        if (widget.filterZeroStar) {
+          print("${repoFetched?.fullName}-${repoFetched?.stargazersCount}");
+          if (repoFetched?.stargazersCount == 0) {
+            print('filter zero');
+            return;
+          }
+        }
         setState(() {
           events.add(event);
         });

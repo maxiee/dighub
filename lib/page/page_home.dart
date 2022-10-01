@@ -21,6 +21,10 @@ class _HomePageState extends State<HomePage> {
               child: Text('Public Events')),
           OutlinedButton(
               onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => PublicEventsPage(filterZeroStar: true,))),
+              child: Text('Public Events (filter zero star)')),
+          OutlinedButton(
+              onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SetTokenPage())),
               child: Text('Set Token'))
         ],
