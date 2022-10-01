@@ -52,10 +52,16 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
     String? repoName = e.repo?.name;
     if (repoName == null) return;
 
-    if (Global.repoCache.contains(repoName)) return;
+    if (Global.repoCache.contains(repoName)) {
+      print('loadRepoDetail cache memory');
+      return;
+    }
 
     final repoCached = await Global.repoCache.getCacheAndDB(repoName);
-    if (repoCached != null) return;
+    if (repoCached != null) {
+      print('loadRepoDetail cache db');
+      return;
+    }
 
     if (concurrentRepoFetchCount >= concurrentRepoFetchLimit) {
       print('loadRepoDetail limit');

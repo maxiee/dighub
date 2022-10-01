@@ -26,7 +26,12 @@ class _EventCompState extends State<EventComp> {
       case kForkEvent:
         return EventCard(child: ForkEventComp(widget.event));
       case kIssueCommentEvent:
-        return EventCard(child: IssueCommentComp(widget.event));
+        return EventCard(child: IssueCommentEventComp(widget.event));
+      case kPullRequestReviewCommentEvent:
+      case kCommitCommentEvent:
+      case kPullRequestReviewEvent:
+      case kWatchEvent:
+        return EventCard(child: BasicEventComp(widget.event));
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -57,10 +62,37 @@ class EventCard extends StatelessWidget {
   }
 }
 
-class IssueCommentComp extends StatelessWidget with EventCompCommons {
+class BasicEventComp extends StatelessWidget with EventCompCommons {
   final Event event;
 
-  const IssueCommentComp(this.event, {super.key});
+  const BasicEventComp(this.event, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<RepoCache, Repository?>(
+        builder: (context, value, child) {
+          Repository? r = value ?? event.repo;
+          return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                titleRow(event),
+                Divider(),
+                repo(r),
+              ]);
+        },
+        selector: (context, cache) => cache.getCache(event.repo?.name ?? ""),
+        shouldRebuild: (previous, next) =>
+            previous?.stargazersCount != next?.stargazersCount ||
+            previous?.description != next?.description);
+  }
+}
+
+
+class IssueCommentEventComp extends StatelessWidget with EventCompCommons {
+  final Event event;
+
+  const IssueCommentEventComp(this.event, {super.key});
 
   @override
   Widget build(BuildContext context) {

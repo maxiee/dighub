@@ -9,6 +9,8 @@ class RepoCache extends ChangeNotifier {
   var cache = <String, Repository>{};
 
   void put(Repository repo) async {
+    // print('put name=${repo.name} fullName=${repo.fullName}');
+
     var repoInCache = cache[repo.fullName];
 
     if (repoInCache == null ||
@@ -26,6 +28,7 @@ class RepoCache extends ChangeNotifier {
   }
 
   Future<Repository?> getCacheAndDB(String fullName) async {
+    // print('getCacheAndDB fullName=${fullName}');
     if (cache.containsKey(fullName)) {
       return getCache(fullName);
     }
