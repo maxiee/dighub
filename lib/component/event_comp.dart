@@ -23,6 +23,8 @@ class _EventCompState extends State<EventComp> {
         return EventCard(child: PullRequestEventComp(widget.event));
       case kCreateEvent:
         return EventCard(child: CreateEventComp(widget.event));
+      case kForkEvent:
+        return EventCard(child: ForkEventComp(widget.event));
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -50,6 +52,34 @@ class EventCard extends StatelessWidget {
       padding: EdgeInsets.all(12),
       child: child,
     );
+  }
+}
+
+class ForkEventComp extends StatelessWidget with EventCompCommons {
+  final Event event;
+
+  const ForkEventComp(this.event, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<RepoCache, Repository?>(
+        builder: (context, value, child) {
+          Repository? r = value ?? event.repo;
+          return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                titleRow(event),
+                Divider(),
+                repo(r),
+                Divider(),
+              ]);
+        },
+        selector: (context, cache) => cache.getCache(event.repo?.name ?? ""),
+        shouldRebuild: (previous, next) =>
+            previous?.stargazersCount != next?.stargazersCount ||
+            previous?.description != next?.description);
+    ;
   }
 }
 
