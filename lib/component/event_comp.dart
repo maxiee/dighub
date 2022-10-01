@@ -19,6 +19,8 @@ class _EventCompState extends State<EventComp> {
     switch (type) {
       case kPushEvent:
         return EventCard(child: PushEventComp(widget.event));
+      case kPullRequestEvent:
+        return EventCard(child: PullRequestEventComp(widget.event));
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -49,6 +51,35 @@ class EventCard extends StatelessWidget {
   }
 }
 
+class PullRequestEventComp extends StatelessWidget with EventCompCommons {
+  final Event event;
+
+  const PullRequestEventComp(this.event, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<RepoCache, Repository?>(
+        builder: (context, value, child) {
+          Repository? r = value ?? event.repo;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              titleRow(event),
+              Divider(),
+              repo(r),
+              Divider(),
+              pullRequestDescription(event)
+            ],
+          );
+        },
+        selector: (context, cache) => cache.getCache(event.repo?.name ?? ""),
+        shouldRebuild: (previous, next) =>
+            previous?.stargazersCount != next?.stargazersCount ||
+            previous?.description != next?.description);
+  }
+}
+
 class PushEventComp extends StatelessWidget with EventCompCommons {
   final Event event;
 
@@ -57,7 +88,7 @@ class PushEventComp extends StatelessWidget with EventCompCommons {
   @override
   Widget build(BuildContext context) {
     return Selector<RepoCache, Repository?>(
-        builder: ((context, value, child) {
+        builder: (context, value, child) {
           Repository? r = value ?? event.repo;
           return Column(
               mainAxisSize: MainAxisSize.min,
@@ -69,8 +100,8 @@ class PushEventComp extends StatelessWidget with EventCompCommons {
                 Divider(),
                 commitDescriptions(event),
               ]);
-        }),
-        selector: ((context, cache) => cache.getCache(event.repo?.name ?? "")),
+        },
+        selector: (context, cache) => cache.getCache(event.repo?.name ?? ""),
         shouldRebuild: (previous, next) =>
             previous?.stargazersCount != next?.stargazersCount ||
             previous?.description != next?.description);
@@ -104,8 +135,19 @@ mixin EventCompCommons {
             .toList());
   }
 
+  Column pullRequestDescription(Event event) {
+    print(event.payload);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(event.payload?['pull_request']['title'] ?? "")
+        ],
+    );
+  }
+
   Column repo(Repository? repo) {
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
