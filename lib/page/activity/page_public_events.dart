@@ -102,7 +102,7 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
           Container(width: 150, child: Consumer<ChannelManager>(builder: (context, channelManager, child) {
             return ListView(
               children: channelManager.channels.map(
-                (e) => OutlinedButton(onPressed: () => null, child: Text(e.name, style: TextStyle(fontSize: 12)))).toList());
+                (e) => OutlinedButton(onPressed: () => null, child: Text(e.name ?? '', style: TextStyle(fontSize: 12)))).toList());
           })),
           Container(width: 1, color: Colors.grey.shade400),
           Flexible(
