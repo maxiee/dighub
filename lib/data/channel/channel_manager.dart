@@ -13,10 +13,11 @@ class ChannelManager extends ChangeNotifier {
     channels.add(ChannelItem(
         name: "What's new", type: ChannelType.whatsNew, payload: ''));
 
-    channels.addAll(
-      await Global.isar.channelItems.filter().typeEqualTo(ChannelType.topic).findAll()
-    );
-    
+    channels.addAll(await Global.isar.channelItems
+        .filter()
+        .typeEqualTo(ChannelType.topic)
+        .findAll());
+
     channels.addAll([
       ChannelItem(
           name: 'Add new topic', type: ChannelType.addTopic, payload: ''),

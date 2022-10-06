@@ -1,5 +1,6 @@
 import 'package:dighub/data/model/channel_item.dart';
 import 'package:dighub/global.dart';
+import 'package:dighub/page/channels/comps/channel_comp_topic.dart';
 import 'package:dighub/page/channels/comps/channel_comp_whats_new.dart';
 import 'package:dighub/page/channels/functions/func_add_topic.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +28,14 @@ class _ChannelsPageState extends State<ChannelsPage> {
 
   onChannelClicked(ChannelItem item) {
     switch(item.type) {
+      case ChannelType.topic:
+        setState(() {
+          currentChannel = item;
+        });
+        break;
       case ChannelType.addTopic:
         functionAddTopic(context);
-        return;
+        break;
     }
   }
 
@@ -40,6 +46,9 @@ class _ChannelsPageState extends State<ChannelsPage> {
     switch (currentChannel?.type) {
       case ChannelType.whatsNew:
         body = ChannelCompWhatsNew();
+        break;
+      case ChannelType.topic:
+        body = ChannelCompTopic(topic: currentChannel!.name!);
         break;
     }
 
