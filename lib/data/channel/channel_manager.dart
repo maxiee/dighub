@@ -21,12 +21,12 @@ class ChannelManager extends ChangeNotifier {
     channels.addAll([
       ChannelItem(
           name: 'Add new topic', type: ChannelType.addTopic, payload: ''),
-      ChannelItem(
-          name: 'Add new lang', type: ChannelType.addLanguage, payload: ''),
-      ChannelItem(
-          name: 'Add new keyword', type: ChannelType.addKeyword, payload: ''),
-      ChannelItem(
-          name: 'Manage Subscribes', type: ChannelType.management, payload: '')
+      // ChannelItem(
+      //     name: 'Add new lang', type: ChannelType.addLanguage, payload: ''),
+      // ChannelItem(
+      //     name: 'Add new keyword', type: ChannelType.addKeyword, payload: ''),
+      // ChannelItem(
+      //     name: 'Manage Subscribes', type: ChannelType.management, payload: '')
     ]);
     notifyListeners();
   }
