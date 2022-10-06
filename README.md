@@ -16,6 +16,10 @@ The tool is currently developed for Windows desktop systems and should work out 
 
 ## Screenshot
 
-|Public Events|Input Token|
+|What's New|Topic|
 |---|---|
-|![](./docs/screenshots/public_event.png)|![](./docs/screenshots/set_token.png)|
+|See what's going on across GitHub|Subscribe your favoriate topic|
+|![](./docs/screenshots/whats_new.png)|![](./docs/screenshots/topic.png)|
+|**Input Token**||
+|You need to fill in your GitHub Token to use dighub<br/>**Your Token will only be used locally.**||
+|![](./docs/screenshots/set_token.png)||
