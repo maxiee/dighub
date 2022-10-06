@@ -39,6 +39,16 @@ class _ChannelsPageState extends State<ChannelsPage> {
     }
   }
 
+  String getTitle() {
+    switch (currentChannel?.type) {
+      case ChannelType.whatsNew:
+        return "What's new";
+      case ChannelType.topic:
+        return 'topic: ${currentChannel?.name ?? ""}';
+    }
+    return "";
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget body = Container();
@@ -54,7 +64,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(title: Text('Public Events'), actions: [StarDighub()]),
+      appBar: AppBar(title: Text(getTitle()), actions: [StarDighub()]),
       body: Row(
         children: [
           Container(
