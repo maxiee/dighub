@@ -95,8 +95,16 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(title: Text('Public Events'), actions: [StarDighub()]),
-      body: ListView(
-        children: events.map((e) => EventComp(e)).toList(),
+      body: Row(
+        children: [
+          Container(width: 150),
+          Container(width: 1, color: Colors.grey.shade400),
+          Flexible(
+            child: ListView(
+            children: events.map((e) => EventComp(e)).toList(),
+                  ),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(child: Icon(Icons.refresh), onPressed: loadEvents),
     );
