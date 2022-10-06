@@ -2,26 +2,20 @@ import 'dart:async';
 
 import 'package:dighub/component/event_comp.dart';
 import 'package:dighub/constant.dart';
-import 'package:dighub/data/channel/channel_manager.dart';
 import 'package:dighub/global.dart';
-import 'package:dighub/widget/star_dighub.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:provider/provider.dart';
 
-class PublicEventsPage extends StatefulWidget {
-  bool filterZeroStar;
-  PublicEventsPage({super.key, this.filterZeroStar = false});
+class ChannelCompWhatsNew extends StatefulWidget {
+  const ChannelCompWhatsNew({super.key});
 
   @override
-  State<PublicEventsPage> createState() => _PublicEventsPageState();
+  State<ChannelCompWhatsNew> createState() => _ChannelCompWhatsNewState();
 }
 
-class _PublicEventsPageState extends State<PublicEventsPage> {
-  static const concurrentRepoFetchLimit = 5;
+class _ChannelCompWhatsNewState extends State<ChannelCompWhatsNew> {
   StreamSubscription<Event>? eventStream;
   List<Event> events = [];
-
   @override
   void initState() {
     super.initState();
@@ -47,10 +41,8 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
         if (repoFetched == null) {
           return;
         }
-        if (widget.filterZeroStar) {
-          if (repoFetched.stargazersCount == 0) {
-            return;
-          }
+        if (repoFetched.stargazersCount == 0) {
+          return;
         }
         setState(() {
           events.add(event);
@@ -96,23 +88,9 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(title: Text('Public Events'), actions: [StarDighub()]),
-      body: Row(
-        children: [
-          Container(width: 150, child: Consumer<ChannelManager>(builder: (context, channelManager, child) {
-            return ListView(
-              children: channelManager.channels.map(
-                (e) => OutlinedButton(onPressed: () => null, child: Text(e.name ?? '', style: TextStyle(fontSize: 12)))).toList());
-          })),
-          Container(width: 1, color: Colors.grey.shade400),
-          Flexible(
-            child: ListView(
-            children: events.map((e) => EventComp(e)).toList(),
-                  ),
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.refresh), onPressed: loadEvents),
+      body: ListView(children: events.map((e) => EventComp(e)).toList()),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.refresh), onPressed: loadEvents),
     );
   }
 }
