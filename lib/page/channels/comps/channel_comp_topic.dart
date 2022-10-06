@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dighub/component/repo_comp.dart';
 import 'package:dighub/global.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
@@ -47,9 +48,9 @@ class _ChannelCompTopicState extends State<ChannelCompTopic> {
       backgroundColor: Colors.grey.shade200,
       body: ListView(
           children:
-              repositories.map((e) => Text(e.toJson().toString())).toList()),
+              repositories.map((e) => RepoComp(repository: e)).toList()),
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.refresh), onPressed: () => null),
+          child: Icon(Icons.refresh), onPressed: () => loadTopics()),
     );
   }
 }
