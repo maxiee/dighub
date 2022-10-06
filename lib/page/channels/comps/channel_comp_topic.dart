@@ -27,7 +27,6 @@ class _ChannelCompTopicState extends State<ChannelCompTopic> {
   @override
   void dispose() {
     super.dispose();
-
   }
 
   void loadTopics() {
@@ -36,6 +35,7 @@ class _ChannelCompTopicState extends State<ChannelCompTopic> {
     repositoriesStream = Global.gitHub.search
         .repositories('${widget.topic} in:topics', sort: 'updated')
         .listen((repo) {
+      if (repo.stargazersCount == 0) return;
       setState(() {
         repositories.add(repo);
       });
@@ -47,8 +47,7 @@ class _ChannelCompTopicState extends State<ChannelCompTopic> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       body: ListView(
-          children:
-              repositories.map((e) => RepoComp(repository: e)).toList()),
+          children: repositories.map((e) => RepoComp(repository: e)).toList()),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.refresh), onPressed: () => loadTopics()),
     );
