@@ -29,9 +29,10 @@ class _AppState extends State<App> {
         if (snapshot.connectionState == ConnectionState.done) {
           return MultiProvider(
               providers: [
-                ChangeNotifierProvider.value(value: Global.repoCache)
+                ChangeNotifierProvider.value(value: Global.repoCache),
+                ChangeNotifierProvider.value(value: Global.channelManager)
               ],
-              child: MaterialApp(
+              child: const MaterialApp(
                   debugShowCheckedModeBanner: false, home: HomePage()));
         } else {
           return CircularProgressIndicator();

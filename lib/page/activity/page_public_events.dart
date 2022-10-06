@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:dighub/component/event_comp.dart';
 import 'package:dighub/constant.dart';
+import 'package:dighub/data/channel/channel_manager.dart';
 import 'package:dighub/global.dart';
 import 'package:dighub/widget/star_dighub.dart';
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:provider/provider.dart';
 
 class PublicEventsPage extends StatefulWidget {
   bool filterZeroStar;
@@ -97,7 +99,11 @@ class _PublicEventsPageState extends State<PublicEventsPage> {
       appBar: AppBar(title: Text('Public Events'), actions: [StarDighub()]),
       body: Row(
         children: [
-          Container(width: 150),
+          Container(width: 150, child: Consumer<ChannelManager>(builder: (context, channelManager, child) {
+            return ListView(
+              children: channelManager.channels.map(
+                (e) => OutlinedButton(onPressed: () => null, child: Text(e.name, style: TextStyle(fontSize: 12)))).toList());
+          })),
           Container(width: 1, color: Colors.grey.shade400),
           Flexible(
             child: ListView(

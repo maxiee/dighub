@@ -1,3 +1,4 @@
+import 'package:dighub/data/channel/channel_manager.dart';
 import 'package:dighub/data/model/cached_repo.dart';
 import 'package:github/github.dart';
 
@@ -9,12 +10,14 @@ class Global {
   static late GitHub gitHub;
   static late RepoCache repoCache;
   static late Isar isar;
+  static late ChannelManager channelManager;
   static bool inited = false;
 
   static Future<void> init() async {
     if (inited) {
       return;
     }
+
     final sp = await SharedPreferences.getInstance();
     final token = sp.getString('token');
     if (token == null) {
@@ -25,6 +28,9 @@ class Global {
 
     repoCache = RepoCache();
     isar = await Isar.open([CachedRepoSchema]);
+
+    channelManager = ChannelManager();
+    channelManager.initChannels();
 
     inited = true;
   }
