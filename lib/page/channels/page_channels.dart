@@ -1,6 +1,7 @@
 import 'package:dighub/data/model/channel_item.dart';
 import 'package:dighub/global.dart';
 import 'package:dighub/page/channels/comps/channel_comp_whats_new.dart';
+import 'package:dighub/page/channels/functions/func_add_topic.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,11 +24,20 @@ class _ChannelsPageState extends State<ChannelsPage> {
 
     currentChannel = Global.channelManager.channels.first;
   }
+
+  onChannelClicked(ChannelItem item) {
+    switch(item.type) {
+      case ChannelType.addTopic:
+        functionAddTopic(context);
+        return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget body = Container();
 
-    switch(currentChannel?.type) {
+    switch (currentChannel?.type) {
       case ChannelType.whatsNew:
         body = ChannelCompWhatsNew();
         break;
@@ -38,15 +48,20 @@ class _ChannelsPageState extends State<ChannelsPage> {
       appBar: AppBar(title: Text('Public Events'), actions: [StarDighub()]),
       body: Row(
         children: [
-          Container(width: 150, child: Consumer<ChannelManager>(builder: (context, channelManager, child) {
-            return ListView(
-              children: channelManager.channels.map(
-                (e) => OutlinedButton(onPressed: () => null, child: Text(e.name ?? '', style: TextStyle(fontSize: 12)))).toList());
-          })),
+          Container(
+              width: 150,
+              child: Consumer<ChannelManager>(
+                  builder: (context, channelManager, child) {
+                return ListView(
+                    children: channelManager.channels
+                        .map((e) => OutlinedButton(
+                            onPressed: () => onChannelClicked(e),
+                            child: Text(e.name ?? '',
+                                style: TextStyle(fontSize: 12))))
+                        .toList());
+              })),
           Container(width: 1, color: Colors.grey.shade400),
-          Flexible(
-            child: body
-          )
+          Flexible(child: body)
         ],
       ),
     );

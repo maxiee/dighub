@@ -1,5 +1,6 @@
 import 'package:dighub/data/channel/channel_manager.dart';
 import 'package:dighub/data/model/cached_repo.dart';
+import 'package:dighub/data/model/channel_item.dart';
 import 'package:github/github.dart';
 
 import 'package:isar/isar.dart';
@@ -27,10 +28,10 @@ class Global {
     }
 
     repoCache = RepoCache();
-    isar = await Isar.open([CachedRepoSchema]);
+    isar = await Isar.open([CachedRepoSchema, ChannelItemSchema]);
 
     channelManager = ChannelManager();
-    channelManager.initChannels();
+    await channelManager.initChannels();
 
     inited = true;
   }

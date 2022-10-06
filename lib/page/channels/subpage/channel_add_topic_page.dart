@@ -17,7 +17,13 @@ class _ChannelAddTopicPageState extends State<ChannelAddTopicPage> {
     controller.dispose();
   }
 
-  onSaveTopic() {}
+  onSaveTopic() {
+    String text = controller.text;
+    if (text.isEmpty) {
+      return;
+    }
+    Navigator.of(context).pop(text);
+  }
 
   @override
   Widget build(BuildContext context) {
