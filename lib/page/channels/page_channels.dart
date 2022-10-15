@@ -28,6 +28,11 @@ class _ChannelsPageState extends State<ChannelsPage> {
 
   onChannelClicked(ChannelItem item) {
     switch (item.type) {
+      case ChannelType.whatsNew:
+        setState(() {
+          currentChannel = item;
+        });
+        break;
       case ChannelType.topic:
         setState(() {
           currentChannel = item;
@@ -59,7 +64,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
         break;
       case ChannelType.topic:
         body = ChannelCompTopic(key: UniqueKey(), topic: currentChannel!.name!);
-        break;
+        break; 
     }
 
     return Scaffold(
