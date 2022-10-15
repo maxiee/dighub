@@ -78,8 +78,10 @@ class _ChannelCompWhatsNewState extends State<ChannelCompWhatsNew> {
 
       return repoFetched;
     } on RepositoryNotFound {
+      print('catch RepositoryNotFound $repoName');
       return null;
-    } on Exception {
+    } catch(e) {
+      print('catch ${e.toString()}');
       return null;
     }
   }
